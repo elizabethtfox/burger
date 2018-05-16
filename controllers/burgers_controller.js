@@ -1,21 +1,25 @@
 // Dependencies
 var express = require("express");
-var app = express.Router();
+var router = express.Router();
 
 // Import model (burger.js) to use database functions
 var burger = require("../models/burger.js");
 
 // Create all routes
-app.get("/", function(req, res){
+router.get("/", function(req, res){
     var burgerList;
     var optionList;
 
     burger.all(function(data){
         burgerList = data;
+        console.log(burgerList);
     });
 
     burger.options(function(data){
         optionList = data;
+        console.log(optionList);
+
+        console.log({ burgers: burgerList, options: optionList});
         res.render("index",
             {
                 burgers: burgerList,
@@ -25,7 +29,7 @@ app.get("/", function(req, res){
     });
 });
 
-app.post("/api/burgers", function(req, res){
+router.post("/api/burgers", function(req, res){
     burger.create([
         "burger_name", "devoured"
     ], [
@@ -36,7 +40,7 @@ app.post("/api/burgers", function(req, res){
     });
 });
 
-app.put("/api/burgers/:id", function (req, res){
+router.put("/api/burgers/:id", function (req, res){
     var condition = "id = " + req.params.id;
 
     console.log("condition", condition);
@@ -46,7 +50,7 @@ app.put("/api/burgers/:id", function (req, res){
     }, condition, function (result){
         if (result.changedRows ===0){
             // If no rows were changed, then the ID must not exist, so 404
-            return.res.status(404).end();
+            return res.status(404).end();
         } else {
             res.status(200).end();
         }
@@ -54,4 +58,4 @@ app.put("/api/burgers/:id", function (req, res){
 });
 
 // Export routes for server.js
-module.exports = app;
+module.exports = router;
