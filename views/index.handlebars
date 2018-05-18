@@ -1,39 +1,44 @@
-<h1>Eat-Da-Burger</h1>
-
-<h3>Eaten</h3>
-
-<ul>
-    {{#each burgers}}
-        {{#if devoured}}
-            {{> burger-block devoured=true}}
-        {{/if}}
-    {{/each}}
-</ul>
-
-<h3>Not Eaten</h3>
-
-<ul>
-    {{#each burgers}}
-        {{#unless devoured}}
-            {{> burger-block devoured=false}}
-        {{/unless}}
-    {{/each}}
-</ul>
-
 <div class="row">
-    <h2>Add a Burger</h2>
-    <form class="create-form">
-        <div class="form-group">
-            <div class="input-field col s8">
-                <select id="burgeroptions">
-                    <option value="" disabled selected>Choose your option</option>
-                    {{#each options}}
-                        {{>burger-options}}
-                    {{/each}}
-                </select>
-                <label>Materalize Select</label>
+    <center>
+        <!-- Left side (ready to eat) -->
+        <div class="col-md-6">
+            <h4 class="red_font">Ready to eat!</h4>
+            <div id="ready_to_eat">
+
+                <!-- Dynamically Insert Ready Burgers Here -->
+                {{#each burgers}}
+                    {{#unless devoured}}
+                        <form action="burger/eat/{{id}}" method="POST">
+                            <div class="input-group">
+                                <li class="form-control">{{id}}. {{burger_name}}</li>
+                                <span class="input-group-btn">
+                  <button class="btn btn-success devour-button" type="submit">Devour It!</button>
+                </span>
+                            </div>
+                        </form>
+                    {{/unless}}
+                {{/each}}
+
             </div>
         </div>
-        <button type="submit">Add Burger</button>
-    </form>
+
+        <!-- Right side (already eaten) -->
+        <div class="col-md-6">
+            <h4 class="red_font">Already eaten!</h4>
+            <div id="already_eaten">
+
+                <!-- Dynamically Insert Eaten Burgers Here -->
+                {{#each burgers}}
+                    {{#if this.devoured}}
+                        <div class="input-group">
+                            <li class="form-control">{{this.id}}. {{this.burger_name}}</li>
+                            <span class="input-group-btn">
+              </span>
+                        </div>
+                    {{/if}}
+                {{/each}}
+
+            </div>
+        </div>
+    </center>
 </div>
